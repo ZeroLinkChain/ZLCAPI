@@ -12,7 +12,7 @@ https://zerolinkchain.com/api.php
 - **ChainChat**: Requires wallet balance for both participants
 - **ChainProx VPN**: Requires mining contribution (public key)
 - **ChainStore**: Requires wallet address for fee payments
-- **Wallet Operations**: No authentication required for creation, private key for imports
+- **Wallet Operations**: Session token-based (secure) or address-based (legacy) authentication
 
 ## Access Control Model
 
@@ -149,10 +149,28 @@ curl -X POST "https://zerolinkchain.com/api.php?e=chainchat_receive" \
 
 ---
 
-## 💰 Wallet API
+## � Secure Wallet Sessions
+
+ZeroLinkChain implements secure session-based wallet authentication to eliminate the need for repeated private key transmission. When importing or creating wallets, the API returns a secure session token that can be used for subsequent operations.
+
+### Session Authentication Benefits
+- **🔒 Enhanced Security**: Private keys never stored client-side or transmitted repeatedly
+- **⏱️ Time-Limited Access**: Sessions expire after 24 hours
+- **🔑 Token-Based Auth**: 256-bit secure session tokens for wallet operations
+- **🛡️ Server-Side Storage**: Private keys temporarily encrypted server-side
+
+### Session Flow
+1. **Import/Create Wallet** → Receive session token + wallet details
+2. **Store Session Token** → Client stores token (not private key)
+3. **Use Token for Operations** → Balance, send, history via session token
+4. **Automatic Expiry** → Session expires after 24 hours, re-import required
+
+---
+
+## �💰 Wallet API
 
 ### Create New Wallet
-Generate a new wallet with private key.
+Generate a new wallet with private key and session token.
 
 **Endpoint:** `GET /api.php?e=wallet_create`
 
@@ -165,10 +183,14 @@ curl "https://zerolinkchain.com/api.php?e=wallet_create"
 ```json
 {
   "address": "zlc18a9e1cff96175fbe0a3645f9ea673a7ebf78bea8",
-  "privateKey": "a1b2c3d4e5f6789...",
-  "status": "created"
+  "private_key": "a1b2c3d4e5f6789...",
+  "session_token": "2cae75f5c41362863861ef15748e8cf9ee098855f8b0c729fbbd2022f858358e",
+  "status": "created",
+  "expires_in": 86400
 }
 ```
+
+⚠️ **Important**: Save the `private_key` securely - it's only returned once. Use `session_token` for subsequent operations.
 
 ### Create Wallet with Mnemonic
 Generate a new wallet with mnemonic phrase.
@@ -185,13 +207,17 @@ curl "https://zerolinkchain.com/api.php?e=wallet_mnemonic_create"
 {
   "address": "zlc18a9e1cff96175fbe0a3645f9ea673a7ebf78bea8",
   "mnemonic": "abandon ability able about above absent absorb abstract absurd abuse access accident",
-  "privateKey": "a1b2c3d4e5f6789...",
-  "status": "created"
+  "private_key": "a1b2c3d4e5f6789...",
+  "session_token": "3dbe86f6d52473974d72ae26859f0284fe119966g9c1d840gced3033g969469f",
+  "status": "created",
+  "expires_in": 86400
 }
 ```
 
+⚠️ **Important**: Save both `mnemonic` and `private_key` securely - they're only returned once. Use `session_token` for subsequent operations.
+
 ### Import Wallet from Mnemonic
-Import an existing wallet using mnemonic phrase.
+Import an existing wallet using mnemonic phrase and receive secure session token.
 
 **Endpoint:** `POST /api.php?e=wallet_mnemonic_import`
 
@@ -205,13 +231,15 @@ curl -X POST "https://zerolinkchain.com/api.php?e=wallet_mnemonic_import" \
 ```json
 {
   "address": "zlc3b98dcd8570951414b02261dbd361be251e68a",
-  "privateKey": "ac1f16a6eeccbddd013b1f1f5142429c3e631c65c7eb211ffe8052099ae7019e",
-  "status": "imported"
+  "mnemonic": "abandon ability able about above absent absorb abstract absurd abuse access accident account accuse achieve acid",
+  "session_token": "4eff97g7e63584085e83bg37960g1395gg230877h0d2e951hdfee4044h080580g",
+  "status": "imported",
+  "expires_in": 86400
 }
 ```
 
 ### Import Wallet from Private Key
-Import an existing wallet using private key.
+Import an existing wallet using private key and receive secure session token.
 
 **Endpoint:** `POST /api.php?e=wallet_import`
 
@@ -225,16 +253,24 @@ curl -X POST "https://zerolinkchain.com/api.php?e=wallet_import" \
 ```json
 {
   "address": "zlc3b98dcd8570951414b02261dbd361be251e68a",
-  "status": "imported"
+  "session_token": "2cae75f5c41362863861ef15748e8cf9ee098855f8b0c729fbbd2022f858358e",
+  "status": "imported",
+  "expires_in": 86400
 }
 ```
 
 ### Check Wallet Balance
-Get the current balance of a wallet address.
+Get the current balance using either wallet address (legacy) or session token (secure).
 
 **Endpoint:** `POST /api.php?e=wallet_balance`
 
-**Request:**
+**Secure Method (Recommended):**
+```bash
+curl -X POST "https://zerolinkchain.com/api.php?e=wallet_balance" \
+  -d "session_token=2cae75f5c41362863861ef15748e8cf9ee098855f8b0c729fbbd2022f858358e"
+```
+
+**Legacy Method:**
 ```bash
 curl -X POST "https://zerolinkchain.com/api.php?e=wallet_balance" \
   -d "address=zlc18a9e1cff96175fbe0a3645f9ea673a7ebf78bea8"
@@ -249,12 +285,70 @@ curl -X POST "https://zerolinkchain.com/api.php?e=wallet_balance" \
 }
 ```
 
+### Verify Session Token
+Validate if a session token is still active and get session info.
+
+**Endpoint:** `POST /api.php?e=wallet_session_verify`
+
+**Request:**
+```bash
+curl -X POST "https://zerolinkchain.com/api.php?e=wallet_session_verify" \
+  -d "session_token=2cae75f5c41362863861ef15748e8cf9ee098855f8b0c729fbbd2022f858358e"
+```
+
+**Response (Valid Session):**
+```json
+{
+  "valid": true,
+  "address": "zlc3b98dcd8570951414b02261dbd361be251e68a",
+  "expires_in": 82400
+}
+```
+
+**Response (Invalid/Expired Session):**
+```json
+{
+  "valid": false,
+  "error": "Invalid or expired session"
+}
+```
+
+### Get Session Information
+Get detailed information about a session token.
+
+**Endpoint:** `POST /api.php?e=wallet_session_info`
+
+**Request:**
+```bash
+curl -X POST "https://zerolinkchain.com/api.php?e=wallet_session_info" \
+  -d "session_token=2cae75f5c41362863861ef15748e8cf9ee098855f8b0c729fbbd2022f858358e"
+```
+
+**Response:**
+```json
+{
+  "address": "zlc3b98dcd8570951414b02261dbd361be251e68a",
+  "created": 1725241320,
+  "expires": 1725327720,
+  "expires_in": 82400,
+  "last_used": 1725245200
+}
+```
+
 ### Send Transaction
-Send ZLC to another wallet address.
+Send ZLC to another wallet using secure session token (recommended) or private key (legacy).
 
 **Endpoint:** `POST /api.php?e=wallet_send`
 
-**Request:**
+**Secure Method (Recommended):**
+```bash
+curl -X POST "https://zerolinkchain.com/api.php?e=wallet_send" \
+  -d "session_token=2cae75f5c41362863861ef15748e8cf9ee098855f8b0c729fbbd2022f858358e" \
+  -d "to=RECIPIENT_ADDRESS" \
+  -d "amount=1.5"
+```
+
+**Legacy Method:**
 ```bash
 curl -X POST "https://zerolinkchain.com/api.php?e=wallet_send" \
   -d "from=YOUR_WALLET_ADDRESS" \
