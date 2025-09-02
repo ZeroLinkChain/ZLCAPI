@@ -1,0 +1,14 @@
+[Unit]
+Description=ZeroLinkChain Node Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/var/www/html/services/node
+ExecStart=/usr/bin/python3 zerolinkchain_node.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

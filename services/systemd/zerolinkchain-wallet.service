@@ -1,0 +1,14 @@
+[Unit]
+Description=ZeroLinkChain Wallet Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/var/www/html/services/wallet
+ExecStart=/usr/bin/python3 zerolinkchain_wallet.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

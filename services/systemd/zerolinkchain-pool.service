@@ -1,0 +1,14 @@
+[Unit]
+Description=ZeroLinkChain Mining Pool Service
+After=network.target zerolinkchain-wallet.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/var/www/html/services/pool
+ExecStart=/usr/bin/python3 zerolinkchain_pool.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
