@@ -65,7 +65,7 @@ curl -X POST -H "Content-Type: application/json" \
   "http://localhost:8001/api/proxy/hop"
 ```
 
-### Wallet Operations
+## Wallet Operations
 
 ```bash
 # Get balance
@@ -79,6 +79,16 @@ curl -X POST -H "Content-Type: application/json" \
 # Get transaction history
 curl "http://localhost:8001/api/wallet/history?wallet=user123&limit=10"
 ```
+
+### New (Mnemonic / Private Key - Dev Only)
+```
+POST /v1/wallet/mnemonic/create -> { mnemonic, privateKey, address }
+POST /v1/wallet/mnemonic/import { mnemonic }
+POST /v1/wallet/privkey/import { privateKey }
+```
+NOTE: Non-production derivation; do not use real seeds.
+
+See `API_DOCUMENTATION.md` for extended security notes.
 
 ---
 

@@ -47,6 +47,97 @@ X-Wallet-Address: your_wallet_address
 X-Wallet-Signature: signature_of_request
 ```
 
+### Open Access Note & Future Hardening
+Current deployment tolerates unauthenticated read access for public chain/state lookups. Write / mutation endpoints MUST migrate to signature-based ephemeral session tokens. Avoid embedding long-lived raw API keys in distributed clients; prefer challenge/response (hash of nonce + request body signed by wallet private key) and rotate session every 15 minutes.
+
+---
+
+## Architectural Update (2025 C Migration)
+The VPN + miner fusion layer is now implemented in C as CloudProx. Legacy Python routing helpers referenced in earlier revisions are deprecated. Host registration now supports multi-protocol bitmask flags enabling nodes to advertise support for multiple tunneling methods simultaneously:
+
+Protocol Flag | Bit | Meaning
+------------- | --- | -------
+PROTO_FLAG_CUSTOM | 1<<0 | Native ZeroLinkChain VPN
+PROTO_FLAG_OPENVPN | 1<<1 | OpenVPN compatibility
+PROTO_FLAG_WIREGUARD | 1<<2 | WireGuard support
+PROTO_FLAG_SOCKS5 | 1<<3 | SOCKS5 relay capability
+PROTO_FLAG_HTTP | 1<<4 | HTTP/HTTPS proxy capability
+PROTO_FLAG_HYBRID | 1<<5 | Composite/bridge node
+
+Route selection endpoints will soon accept a `required_protocol_flags` parameter (bitwise AND must match). Until exposed, server-side defaults accept ANY.
+
+---
+
+## New / Updated Wallet Endpoints
+Mnemonic + private key import endpoints were added to simplify deterministic wallet recovery. These are PRE-PRODUCTION and use a simplified derivation—not BIP39-compliant.
+
+1. Create Mnemonic (development only)
+```
+POST /v1/wallet/mnemonic/create
+Response 200:
+{ "mnemonic": "alpha beta gamma ...", "privateKey": "hex", "address": "zlc1..." }
+```
+
+2. Import Mnemonic
+```
+POST /v1/wallet/mnemonic/import
+Body: { "mnemonic": "alpha beta gamma ..." }
+Response 200: { "mnemonic": "alpha beta gamma ...", "privateKey": "hex", "address": "zlc1..." }
+```
+
+3. Import Raw Private Key
+```
+POST /v1/wallet/privkey/import   # canonical
+# (Alias /v1/wallet/privatekey/import may be added later)
+Body: { "privateKey": "hex" }
+Response 200: { "privateKey": "hex", "address": "zlc1..." }
+```
+
+4. Get Wallet Balance (Unchanged)
+```
+GET /v1/wallet/balance?address=zlc1...
+Response: { "address": "zlc1...", "balance": 123.456, "pending": 0.0 }
+```
+
+Security Notes:
+* Do NOT send real seed phrases here (non-production derivation & no HSM backing).
+* Remove mnemonic/private key echo in responses before mainnet hardening.
+* Future: Replace with hardware-bound signing (WebAuthn / local enclave) & challenge-based auth.
+
+---
+
+## CloudProx API (Coming Soon)
+Low-level VPN route establishment is presently native (non-HTTP). A thin REST exposure is planned:
+
+Endpoint | Method | Purpose | Notes
+-------- | ------ | ------- | -----
+/v1/cloudprox/hosts | GET | List eligible hosts (filtered view) | Redacts IPs unless authenticated
+/v1/cloudprox/route | POST | Request new multi-hop route | Body will include min_hops, min_bandwidth, required_protocol_flags
+/v1/cloudprox/route/:id | GET | Route status / stats | Includes hop anonymized metadata
+/v1/cloudprox/metrics | GET | Aggregate network metrics | Public
+
+Route object (draft):
+```
+{
+  "route_id": "hex64",
+  "hop_count": 3,
+  "protocol_flags": 5,
+  "avg_bandwidth_mbps": 120.5,
+  "total_latency_ms": 240.7,
+  "diversity": { "asn": 3, "isp": 3 },
+  "created": 1756769132,
+  "aead": { "cipher": "AES-256-GCM", "sequence_out": 42 }
+}
+```
+
+Security Roadmap Tags:
+* [P1] AEAD for all protocol layers (legacy XOR removal)
+* [P2] Onion per-hop layer encryption
+* [P2] Sybil resistance / host staking
+* [P3] Traffic shaping & cover traffic
+
+---
+
 ---
 
 ## Base URLs

@@ -123,6 +123,15 @@ curl -X POST -H 'Content-Type: application/json' \
   "$ZLC_API/api/proxy/hop"
 ```
 
+Upcoming (CloudProx native):
+```
+# Draft endpoints (subject to change)
+POST /v1/cloudprox/route            # body: { min_hops, min_bandwidth, required_protocol_flags }
+GET  /v1/cloudprox/route/{id}       # route status / AEAD seq
+GET  /v1/cloudprox/hosts            # sanitized host list
+GET  /v1/cloudprox/metrics          # aggregate metrics
+```
+
 ### E. Blockchain Data
 ```bash
 # Network info
