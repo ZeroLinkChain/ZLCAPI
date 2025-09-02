@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scal        <div class="download-section">
+            <h2>🚀 Client Interface & Access</h2>
+            <p><strong>Background Menu System:</strong> The client runs as a system tray application with instant access to all features.</p>
+            <ul>
+                <li><strong>Launch Client:</strong> <code>zlc</code> (starts background service with system tray menu)</li>
+                <li><strong>Menu Access:</strong> Right-click system tray icon to access all features</li>
+                <li><strong>ChainChat:</strong> Menu → ChainChat → Connect to Wallet Address (1-on-1 encrypted messaging)</li>
+                <li><strong>ChainProx VPN:</strong> Menu → VPN (bandwidth based on mining contribution)</li>
+                <li><strong>Wallet:</strong> Menu → Wallet (send, receive, balance, import/export)</li>
+                <li><strong>Mining:</strong> Menu → Mining (start/stop, earnings, pool stats)</li>
+                <li><strong>ChainStore:</strong> Menu → Store (marketplace, file storage, smart contracts)</li>
+                <li><strong>Settings:</strong> Menu → Settings (keys, preferences, network config)</li>
+            </ul>
+        </div>v class="info">
+            <h3>🖥️ Client Interface</h3>
+            <p><strong>Background Menu System:</strong> The ZeroLinkChain client runs as a background service with a system tray menu interface.</p>
+            <ul>
+                <li><strong>Menu Access:</strong> Right-click system tray icon to access all features</li>
+                <li><strong>Always Running:</strong> Client stays in background for continuous network participation</li>
+                <li><strong>Quick Access:</strong> Instant access to ChainChat, ChainProx VPN, wallet, and mining</li>
+                <li><strong>Key Management:</strong> Enter private key once for wallet features, public key for mining</li>
+                <li><strong>Auto-Connect:</strong> Automatically connects to network and unlocks features based on your contribution</li>
+            </ul>
+        </div>
+
+        <div class="info">
+            <h3>🔐 Access Requirements</h3>
+            <p><strong>Important:</strong> Feature access based on wallet balance and network contribution:</p>
+            <ul>
+                <li><strong>ChainChat:</strong> Requires wallet balance + target wallet address for mutual authentication</li>
+                <li><strong>ChainProx VPN:</strong> Requires contribution - bandwidth based on mining rate</li>
+                <li><strong>ChainStore:</strong> Requires tiny fee per transaction (barely noticeable)</li>
+                <li><strong>Wallet Functions:</strong> Available immediately with private key</li>
+                <li><strong>Mining/Hosting:</strong> Available immediately with public key</li>
+            </ul>
+            <p><strong>Client Setup:</strong> Enter private key for wallet access, or public key for mining/hosting nodes.</p>
+        </div><title>ZeroLinkChain Client Download</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.1);
+            padding: 40px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            color: #00d4ff;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .download-section {
+            background: rgba(0,212,255,0.1);
+            padding: 30px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px solid rgba(0,212,255,0.3);
+        }
+        .download-btn {
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 25px;
+            display: inline-block;
+            font-weight: bold;
+            font-size: 18px;
+            transition: transform 0.3s;
+            margin: 10px 5px;
+        }
+        .download-btn:hover {
+            transform: scale(1.05);
+        }
+        .code-block {
+            background: rgba(0,0,0,0.5);
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            border-left: 4px solid #00d4ff;
+        }
+        .warning {
+            background: rgba(255,193,7,0.2);
+            border: 1px solid rgba(255,193,7,0.5);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .info {
+            background: rgba(23,162,184,0.2);
+            border: 1px solid rgba(23,162,184,0.5);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔗 ZeroLinkChain Client Download</h1>
+        
+        <div class="download-section">
+            <h2>📥 Download Client v1.0.0</h2>
+            <p>Unified client for Debian/Ubuntu systems supporting wallet operations, VPN connectivity, mining, and ChainChat messaging.</p>
+            
+            <div style="text-align: center;">
+                <a href="/zerolinkchain-client-1.0.0.tar.gz" class="download-btn">
+                    📦 Download Client Package (38KB)
+                </a>
+                <a href="/CLIENT_SETUP.md" class="download-btn">
+                    📋 Setup Instructions
+                </a>
+            </div>
+        </div>
+
+        <div class="download-section">
+            <h2>⚡ Quick Start</h2>
+            <div class="code-block">
+# Download and install<br>
+wget https://zerolinkchain.com/zerolinkchain-client-1.0.0.tar.gz<br>
+tar -xzf zerolinkchain-client-1.0.0.tar.gz<br>
+cd zerolinkchain-client-1.0.0<br>
+sudo ./install.sh<br>
+<br>
+# Test the installation<br>
+zlc --help
+            </div>
+        </div>
+
+        <div class="download-section">
+            <h2>🚀 Client Modes & Access</h2>
+            <ul>
+                <li><strong>Wallet:</strong> <code>zlc wallet --private-key YOUR_KEY</code></li>
+                <li><strong>VPN Client:</strong> <code>zlc vpn-client --country US --hops 3</code> (requires mining for bandwidth allocation)</li>
+                <li><strong>Host/Miner:</strong> <code>zlc host-miner --threads 4 --bandwidth 100</code> (earns rewards + unlocks features)</li>
+                <li><strong>ChainChat:</strong> <code>zlc chainchat --username alice</code> (requires wallet balance)</li>
+                <li><strong>Blockchain Node:</strong> <code>zlc blockchain-node --node-port 8333</code></li>
+                <li><strong>Unified (All):</strong> <code>zlc unified --threads 4 --username bob</code> (recommended)</li>
+            </ul>
+        </div>
+
+        <div class="warning">
+            <h3>⚠️ Important: Mining-Based Access System</h3>
+            <ul>
+                <li><strong>Feature Access Model</strong> - ChainChat requires wallet balance, ChainProx VPN is bandwidth-limited by contribution, ChainStore uses pay-per-transaction</li>
+                <li><strong>VPN bandwidth is allocated based on mining rate</strong> - More mining = more VPN bandwidth allowance</li>
+                <li><strong>Hosting earns continuous rewards</strong> - Run host-miner mode to earn ZLC while providing network services</li>
+                <li><strong>Private key/mnemonic authentication only</strong> - No wallet names supported for security</li>
+            </ul>
+        </div>
+
+                <div class="info">
+            <h3>� Access Requirements</h3>
+            <p><strong>Important:</strong> Feature access based on wallet balance and network contribution:</p>
+            <ul>
+                <li><strong>ChainChat:</strong> 1-on-1 encrypted messaging between wallet addresses (requires wallet balance)</li>
+                <li><strong>ChainProx VPN:</strong> Requires contribution - bandwidth based on mining rate</li>
+                <li><strong>ChainStore:</strong> Requires tiny fee per transaction (barely noticeable)</li>
+                <li><strong>Wallet Functions:</strong> Available immediately with private key</li>
+                <li><strong>Mining/Hosting:</strong> Available immediately with public key</li>
+            </ul>
+            <p><strong>Client Setup:</strong> Enter private key for wallet access, or public key for mining/hosting nodes.</p>
+        </div>
+
+        <div class="info">
+            <h3>💡 System Requirements</h3>
+            <ul>
+                <li><strong>OS:</strong> Debian 10+, Ubuntu 18.04+</li>
+                <li><strong>CPU:</strong> 64-bit processor</li>
+                <li><strong>RAM:</strong> 512MB minimum, 2GB recommended</li>
+                <li><strong>Network:</strong> Internet connection required</li>
+                <li><strong>Dependencies:</strong> OpenSSL 3.0+, libcurl, libjson-c</li>
+            </ul>
+        </div>
+
+        <div class="download-section">
+            <h2>📚 Documentation</h2>
+            <p>For complete API documentation and integration guides:</p>
+            <ul>
+                <li><a href="https://github.com/ZeroLinkChain/ZLCAPI" style="color: #00d4ff;">GitHub API Repository</a></li>
+                <li><a href="/CLIENT_SETUP.md" style="color: #00d4ff;">Complete Setup Guide</a></li>
+                <li><a href="/dashboard.html" style="color: #00d4ff;">Network Dashboard</a></li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+            <p>© 2025 ZeroLinkChain Team | <a href="/" style="color: #00d4ff;">zerolinkchain.com</a></p>
+        </div>
+    </div>
+</body>
+</html>
